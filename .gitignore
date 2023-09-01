@@ -1,0 +1,34 @@
+#Ignore the virtual environment directory
+idealvenv/
+
+# Ignore pipenv's virtual environment
+Pipfile.lock
+
+# Ignore database files
+db.sqlite3
+
+# Ignore compiled Python files
+_pycache_/
+
+# Ignore settings files
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore logs and media files
+*.log
+media/
+
+# Ignore environment-specific settings (modify as needed)
+.env
+
+# Ignore system and editor-specific files
+.vscode/
+.idea/
+*.swo
+*.swp
+*.swn
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
