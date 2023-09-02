@@ -18,6 +18,8 @@ _pycache_/
 # Ignore logs and media files
 *.log
 media/
+bin/
+lib64/
 
 # Ignore environment-specific settings (modify as needed)
 .env

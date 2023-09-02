@@ -1,4 +1,4 @@
-# Django Project Setup Guide
+# ideal media production
 
 This guide explains how to set up a Django project within a Python virtual environment. Using a virtual environment ensures that project dependencies are isolated and can be easily managed.
 

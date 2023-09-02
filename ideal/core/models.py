@@ -1,11 +1,24 @@
-from django.db import models
+"""
+This module contains Django models for our application.
+
+This module defines various Django models used in our application to represent
+database tables. It includes models for users, posts, comments, and other data
+structures.
+
+"""
 import uuid
+from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 # Custom manager for the UserProfile model
 class AccountManager(BaseUserManager):
+    """
+      creating a user extending from baseUserMode which is django inbuild
+    """
     def create_user(self, email, username, password=None):
-        # Check if email is provided
+        """
+            # Check if email is provided
+        """
         if not email:
             raise ValueError("Please provide an email.")
         # Check if username is provided
@@ -25,7 +38,9 @@ class AccountManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, username, password):
-        # Create a superuser by calling create_user with additional settings
+        """
+        Create a superuser by calling create_user with additional settings
+        """
         user = self.create_user(
             email=self.normalize_email(email),
             username=username,
@@ -40,7 +55,9 @@ class AccountManager(BaseUserManager):
 
 # Custom user model based on AbstractBaseUser
 class UserProfile(AbstractBaseUser):
-    # Fields for the user profile
+    """
+     Fields for the user profile
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True, max_length=200, verbose_name="email")
     username = models.CharField(max_length=255, unique=True)
@@ -56,28 +73,56 @@ class UserProfile(AbstractBaseUser):
     objects = AccountManager()  # Custom manager for the UserProfile model
 
     # Check if the user has a specific permission
-    def has_perm(self, perm, obj=None):
-        return self.is_superuser  # Only superusers have all permissions
+    def has_perm(self):
+        """
+        Only superusers have all permissions
+        """
+        return self.is_superuser
 
     # Check if the user has permissions to access a specific app/module
-    def has_module_perms(self, app_label):
-        return self.is_superuser  # Only superusers have all app-level permissions
+    def has_module_perms(self):
+        """
+        Only superusers have all app-level permissions
+        """
+        return self.is_superuser
 
     # Define how the user instance is represented as a string
     def __str__(self):
-        return self.username
+        return f"{self.username}"
 
 
 
 # Model for Tags
 class Tag(models.Model):
+    """
+    Model representing tags for photos and videos.
+
+    Tags are used to categorize and organize photos and videos.
+    Each tag has a unique name.
+
+    Attributes:
+        name (str): The name of the tag.
+    """
+
     name = models.CharField(max_length=50, unique=True)
 
-    def __str__(self):
-        return self.name
+    def __str__(self) -> str:
+        return f"{self.name}"
 
 # Model for Photos
 class Photo(models.Model):
+    """
+    Model representing photos.
+
+    Photos can have a title, description, image, and be associated with tags.
+
+    Attributes:
+        title (str): The title of the photo.
+        description (str): A description of the photo.
+        image (ImageField): The image file for the photo.
+        tags (ManyToManyField): Tags associated with the photo.
+    """
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=100)
     description = models.TextField(blank=True)
@@ -85,10 +130,22 @@ class Photo(models.Model):
     tags = models.ManyToManyField(Tag, related_name='photos')
 
     def __str__(self):
-        return self.title
+        return f"{self.title}"
 
 # Model for Videos
 class Video(models.Model):
+    """
+    Model representing videos.
+
+    Videos can have a title, description, video file, and be associated with tags.
+
+    Attributes:
+        title (str): The title of the video.
+        description (str): A description of the video.
+        video_file (FileField): The video file for the video.
+        tags (ManyToManyField): Tags associated with the video.
+    """
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=100)
     description = models.TextField(blank=True)
@@ -96,4 +153,5 @@ class Video(models.Model):
     tags = models.ManyToManyField(Tag, related_name='videos')
 
     def __str__(self):
-        return self.title
+        return f"{self.title}"
+    
