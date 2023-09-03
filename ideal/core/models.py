@@ -10,14 +10,16 @@ import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
+
 # Custom manager for the UserProfile model
 class AccountManager(BaseUserManager):
     """
-      creating a user extending from baseUserMode which is django inbuild
+    creating a user extending from baseUserMode which is django inbuild
     """
+
     def create_user(self, email, username, password=None):
         """
-            # Check if email is provided
+        # Check if email is provided
         """
         if not email:
             raise ValueError("Please provide an email.")
@@ -53,22 +55,26 @@ class AccountManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+
 # Custom user model based on AbstractBaseUser
 class UserProfile(AbstractBaseUser):
     """
-     Fields for the user profile
+    Fields for the user profile
     """
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True, max_length=200, verbose_name="email")
     username = models.CharField(max_length=255, unique=True)
     first_name = models.CharField(max_length=200, null=True)
     last_name = models.CharField(max_length=200, null=True)
     is_active = models.BooleanField(default=True)  # Indicates if the account is active
-    is_staff = models.BooleanField(default=False)   # Indicates staff status
+    is_staff = models.BooleanField(default=False)  # Indicates staff status
     is_superuser = models.BooleanField(default=False)  # Indicates superuser status
 
     USERNAME_FIELD = "email"  # Use email as the unique identifier for login
-    REQUIRED_FIELDS = ["username"]  # Fields required for user creation (in addition to email)
+    REQUIRED_FIELDS = [
+        "username"
+    ]  # Fields required for user creation (in addition to email)
 
     objects = AccountManager()  # Custom manager for the UserProfile model
 
@@ -91,8 +97,30 @@ class UserProfile(AbstractBaseUser):
         return f"{self.username}"
 
 
-
 # Model for Tags
+
+
+class TagManager(models.Manager):
+    """
+    Custom manager for the Tag model.
+
+    This manager can be used to add custom database queries
+    or methods related to the Tag model in the future.
+
+    Example:
+    To retrieve all tags that start with a specific prefix, you can use:
+    ```
+    Tag.objects.get_tags_with_prefix('your_prefix')
+    ```
+    """
+
+    def get_tags_with_prefix(self, prefix):
+        """
+        Get all tags that start with a specific prefix.
+        """
+        return self.filter(name__startswith=prefix)
+
+
 class Tag(models.Model):
     """
     Model representing tags for photos and videos.
@@ -105,11 +133,36 @@ class Tag(models.Model):
     """
 
     name = models.CharField(max_length=50, unique=True)
+    objects = TagManager()
 
     def __str__(self) -> str:
         return f"{self.name}"
 
+
 # Model for Photos
+
+
+class PhotoManager(models.Manager):
+    """
+    Custom manager for the Photo model.
+
+    This manager can be used to add custom database queries
+    or methods related to the Photo model in the future.
+
+    Example:
+    To retrieve all photos with a specific tag, you can use:
+    ```
+    Photo.objects.get_photos_with_tag('your_tag')
+    ```
+    """
+
+    def get_photos_with_tag(self, tag_name):
+        """
+        Get all photos with a specific tag.
+        """
+        return self.filter(tags__name=tag_name)
+
+
 class Photo(models.Model):
     """
     Model representing photos.
@@ -126,13 +179,38 @@ class Photo(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='photos/', null=True, blank=True)
-    tags = models.ManyToManyField(Tag, related_name='photos')
+    image = models.ImageField(upload_to="photos/", null=True, blank=True)
+    tags = models.ManyToManyField(Tag, related_name="photos")
+    objects = PhotoManager()
 
     def __str__(self):
         return f"{self.title}"
 
+
 # Model for Videos
+
+
+class VideoManager(models.Manager):
+    """
+    Custom manager for the Video model.
+
+    This manager can be used to add custom database queries
+    or methods related to the Video model in the future.
+
+    Example:
+    To retrieve all videos with a specific tag, you can use:
+    ```
+    Video.objects.get_videos_with_tag('your_tag')
+    ```
+    """
+
+    def get_videos_with_tag(self, tag_name):
+        """
+        Get all videos with a specific tag.
+        """
+        return self.filter(tags__name=tag_name)
+
+
 class Video(models.Model):
     """
     Model representing videos.
@@ -149,9 +227,9 @@ class Video(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-    video_file = models.FileField(upload_to='videos/', null=True, blank=True)
-    tags = models.ManyToManyField(Tag, related_name='videos')
+    video_file = models.FileField(upload_to="videos/", null=True, blank=True)
+    tags = models.ManyToManyField(Tag, related_name="videos")
+    objects = VideoManager()
 
     def __str__(self):
         return f"{self.title}"
-    
