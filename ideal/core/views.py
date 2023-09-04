@@ -2,7 +2,9 @@
 API views for user registration, login, user profile management, and authentication.
 """
 
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.views import APIView
+from rest_framework.exceptions import PermissionDenied, AuthenticationFailed
 from rest_framework.response import Response
 from rest_framework import generics, status
 from rest_framework.permissions import (
@@ -12,9 +14,6 @@ from rest_framework.permissions import (
 )
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework.exceptions import PermissionDenied, AuthenticationFailed
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-
 from .models import UserProfile, Tag, Photo, Video
 from .serializers import (
     TagSerializer,
