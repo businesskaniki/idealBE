@@ -251,3 +251,4 @@ class VideoDetailUpdateDeleteView(RetrieveUpdateDestroyAPIView):
     queryset = Video.objects.all()
     serializer_class = VideoSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    
