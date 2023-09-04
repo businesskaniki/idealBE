@@ -5,7 +5,7 @@ This module contains Django views and URL configurations for handling user regis
 authentication, user profile management, and CRUD operations for Tag, Photo, and Video objects.
 """
 
-from django.urls import path
+from django.urls import path,re_path
 from .views import (
     RegisterView,
     LoginView,
@@ -23,11 +23,11 @@ urlpatterns = [
     path("register/", RegisterView.as_view(), name="register"),
     path("login/", LoginView.as_view(), name="login"),
     path("user-profiles/", UserProfileListView.as_view(), name="user-profiles"),
-    path("user-profiles/<int:pk>/", UserProfileDetail.as_view(), name="user-profile-detail"),
+    re_path(r'^user-profile/(?P<pk>[0-9a-f-]+)/$', UserProfileDetail.as_view(), name="user-profile-detail"),
     path("tags/", TagListCreateView.as_view(), name="tag-list-create"),
-    path("tags/<int:pk>/", TagDetailUpdateDeleteView.as_view(), name="tag-detail"),
+    re_path(r'^tags/(?P<pk>[0-9a-f-]+)/$', TagDetailUpdateDeleteView.as_view(), name="tag-detail"),
     path("photos/", PhotoListCreateView.as_view(), name="photo-list-create"),
-    path("photos/<int:pk>/", PhotoDetailUpdateDeleteView.as_view(), name="photo-detail"),
+    re_path(r'^photos/(?P<pk>[0-9a-f-]+)/$', PhotoDetailUpdateDeleteView.as_view(), name="photo-detail"),
     path("videos/", VideoListCreateView.as_view(), name="video-list-create"),
-    path("videos/<int:pk>/", VideoDetailUpdateDeleteView.as_view(), name="video-detail"),
+    re_path(r'^videos/(?P<pk>[0-9a-f-]+)/$', VideoDetailUpdateDeleteView.as_view(), name="video-detail"),  # Use re_path with a regex pattern
 ]

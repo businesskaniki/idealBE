@@ -86,15 +86,14 @@ class LoginView(APIView):
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.validated_data["user"]
+            print(user)
             token = RefreshToken.for_user(user)
             # Set custom claims in the token payload
             token.payload["is_admin"] = user.is_admin
-            token.payload["is_writer"] = user.is_writer
             response_data = {
                 "refresh": str(token),
                 "access": str(token.access_token),
                 "admin": user.is_admin,
-                "is_writer": user.is_writer,
                 "id": user.id,
             }
             return Response(response_data, status=status.HTTP_200_OK)
@@ -251,3 +250,4 @@ class VideoDetailUpdateDeleteView(RetrieveUpdateDestroyAPIView):
     queryset = Video.objects.all()
     serializer_class = VideoSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    

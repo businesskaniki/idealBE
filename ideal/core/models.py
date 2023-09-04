@@ -49,6 +49,7 @@ class AccountManager(BaseUserManager):
             password=password,
         )
         # Set the user as staff and superuser
+        user.is_admin = True
         user.is_staff = True
         user.is_superuser = True
         # Save the user with updated settings
@@ -67,6 +68,7 @@ class UserProfile(AbstractBaseUser):
     username = models.CharField(max_length=255, unique=True)
     first_name = models.CharField(max_length=200, null=True)
     last_name = models.CharField(max_length=200, null=True)
+    is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)  # Indicates if the account is active
     is_staff = models.BooleanField(default=False)  # Indicates staff status
     is_superuser = models.BooleanField(default=False)  # Indicates superuser status
@@ -83,7 +85,7 @@ class UserProfile(AbstractBaseUser):
         """
         Only superusers have all permissions
         """
-        return self.is_superuser
+        return self.is_admin
 
     # Check if the user has permissions to access a specific app/module
     def has_module_perms(self):
