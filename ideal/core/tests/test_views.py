@@ -11,6 +11,7 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
 from django.test import TestCase
+from uuid import uuid4  # Import UUID generator
 
 
 from core.models import  Tag, Photo, Video
@@ -48,6 +49,8 @@ class AuthenticationTests(TestCase):
             "email": "newuser@example.com",
             "username": "newuser",
             "password": "newpassword",
+            "first_name": "firstname",
+            "last_name": "lastname"
         }
         response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -58,8 +61,8 @@ class AuthenticationTests(TestCase):
         """
         url = reverse("login")
         data = {
-            "username": "testuser",
-            "password": "testpassword",
+            "email": "newuser@example.com",
+            "password": "newpassword",
         }
         response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -91,7 +94,7 @@ class TagTests(TestCase):
         """
         Test Tag list API view.
         """
-        url = reverse("tag-list")
+        url = reverse("tag-list-create")
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -121,13 +124,16 @@ class PhotoTests(TestCase):
             username="testuser",
             password="testpassword",
         )
-        self.photo = Photo.objects.create(title="Test Photo")
+        self.photo = Photo.objects.create(
+            title="Test Photo",
+            id=uuid4()  # Generate a UUID for the primary key
+        )
 
     def test_photo_list(self):
         """
         Test Photo list API view.
         """
-        url = reverse("photo-list")
+        url = reverse("photo-list-create")
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -135,7 +141,7 @@ class PhotoTests(TestCase):
         """
         Test Photo detail API view.
         """
-        url = reverse("photo-detail", args=[self.photo.id])
+        url = reverse("photo-detail", args=[str(self.photo.id)])  # Convert UUID to string
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -163,7 +169,7 @@ class VideoTests(TestCase):
         """
         Test Video list API view.
         """
-        url = reverse("video-list")
+        url = reverse("video-list-create")
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -171,7 +177,7 @@ class VideoTests(TestCase):
         """
         Test Video detail API view.
         """
-        url = reverse("video-detail", args=[self.video.id])
+        url = reverse("video-detail", args=[str(self.video.id)])
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
