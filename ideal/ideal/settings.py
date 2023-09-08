@@ -26,12 +26,12 @@ SECRET_KEY = "django-insecure-hkq0@twe7zf=s@kihb#*hr+5)f97)!42y%+%z%=0t5kg1ce&!8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     "core",
     # rest framework
     "rest_framework",
@@ -44,6 +44,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -73,6 +75,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "ideal.wsgi.application"
 
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # : Allow requests from your React app during development
+]
+
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -81,7 +88,7 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "ideal",
-        "USER": "nick",
+        "USER": "ideal",
         "PASSWORD": "ideal",
         "HOST": "localhost",  # Set this to the appropriate host if not running locally
         "PORT": "",  # Leave it empty to use the default PostgreSQL port (5432)

@@ -135,10 +135,16 @@ class Tag(models.Model):
     """
 
     name = models.CharField(max_length=50, unique=True)
-    objects = TagManager()
+    description = models.TextField(null=True)
+
+    def save(self, *args, **kwargs):
+        if not self.description:
+            self.description = self.name
+        super(Tag, self).save(*args, **kwargs)
 
     def __str__(self) -> str:
         return f"{self.name}"
+
 
 
 # Model for Photos
