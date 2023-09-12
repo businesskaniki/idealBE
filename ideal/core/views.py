@@ -209,6 +209,7 @@ class TagListCreateView(ListCreateAPIView):
     """
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticatedOrReadOnly]
 
 class PhotoListCreateView(ListCreateAPIView):
@@ -217,6 +218,7 @@ class PhotoListCreateView(ListCreateAPIView):
     """
     queryset = Photo.objects.all()
     serializer_class = PhotoSerializer
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticatedOrReadOnly]
 
 class VideoListCreateView(ListCreateAPIView):
