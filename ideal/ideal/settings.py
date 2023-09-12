@@ -31,7 +31,6 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
-    'corsheaders',
     "core",
     # rest framework
     "rest_framework",
