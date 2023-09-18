@@ -1,5 +1,5 @@
 #Ignore the virtual environment directory
-idealvenv/
+env/
 
 # Ignore pipenv's virtual environment
 Pipfile.lock
